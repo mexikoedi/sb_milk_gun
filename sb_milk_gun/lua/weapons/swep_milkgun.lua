@@ -8,7 +8,7 @@ end
 
 SWEP.PrintName = "Milk Gun"
 SWEP.Author = "mexikoedi"
-SWEP.Instructions = "Shoot and play a sound with Primaryfire. Secondaryfire to hear a different sound."
+SWEP.Instructions = "Shoot and play a sound with primary attack. Use secondary attack to hear a different sound."
 SWEP.Purpose = "Gives milk bags to everyone"
 SWEP.Category = "mexikoedi's SWEPS"
 SWEP.DrawWeaponInfoBox = true
@@ -63,19 +63,26 @@ function SWEP:DrawWeaponSelection(x, y, w, h, a)
 end
 
 function SWEP:PrimaryAttack()
+    self.currentOwner = self:GetOwner()
     self:SetNextPrimaryFire(CurTime() + 1 / self.Primary.RPS)
     if not self:CanPrimaryAttack() then return end
     self:TakePrimaryAmmo(1)
-    self:EmitSound(ShootSound)
+
+    if SERVER then
+        self.currentOwner:EmitSound(ShootSound)
+    end
+
     if (CLIENT) then return end
     local ent = ents.Create("milk_gun")
     if (not IsValid(ent)) then return end
     ent:SetModel("models/props_junk/garbage_milkcarton002a.mdl")
-    ent:SetAngles(self:GetOwner():EyeAngles())
-    ent:SetPos(self:GetOwner():EyePos() + (self:GetOwner():GetAimVector() * 16))
-    ent:SetOwner(self:GetOwner())
+    ent:SetAngles(self.currentOwner:EyeAngles())
+    ent:SetPos(self.currentOwner:EyePos() + (self.currentOwner:GetAimVector() * 16))
+    ent.Owner = self.currentOwner
+    ent:SetOwner(self.currentOwner)
+    ent:SetPhysicsAttacker(self.currentOwner)
+    ent.fingerprints = self.fingerprints
     ent:Spawn()
-    ent.Owner = self:GetOwner()
     ent:Activate()
     util.SpriteTrail(ent, 0, Color(255, 255, 255), false, 16, 1, 6, 1 / (15 + 1) * 0.5, "trails/laser.vmt")
     local phys = ent:GetPhysicsObject()
@@ -87,17 +94,17 @@ function SWEP:PrimaryAttack()
     end
 
     phys:SetMass(100)
-    phys:SetVelocity(self:GetOwner():GetAimVector() * 100000)
+    phys:SetVelocity(self.currentOwner:GetAimVector() * 100000)
     local anglo = Angle(-10, -5, 0)
-    self:GetOwner():ViewPunch(anglo)
+    self.currentOwner:ViewPunch(anglo)
 end
 
 function SWEP:SecondaryAttack()
+    self.currentOwner = self:GetOwner()
     self:SetNextSecondaryFire(CurTime() + 5)
 
     if SERVER then
-        self.currentOwner = self:GetOwner()
-        self:GetOwner():EmitSound(SecondSound)
+        self.currentOwner:EmitSound(SecondSound)
     end
 end
 
