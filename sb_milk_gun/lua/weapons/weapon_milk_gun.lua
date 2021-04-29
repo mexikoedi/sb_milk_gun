@@ -1,6 +1,8 @@
+if engine.ActiveGamemode() == "terrortown" then return end
+
 if SERVER then
     AddCSLuaFile()
-    resource.AddFile("materials/vgui/entities/swep_milkgun.vmt")
+    resource.AddFile("materials/vgui/entities/weapon_milk_gun.vmt")
     resource.AddFile("materials/HUD/killicons/milk_gun.vmt")
     resource.AddFile("sound/milk.wav")
     resource.AddFile("sound/milk_altfire.wav")
@@ -15,7 +17,7 @@ SWEP.DrawWeaponInfoBox = true
 SWEP.BounceWeaponIcon = true
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
-SWEP.Icon = "vgui/entities/swep_milkgun"
+SWEP.Icon = "vgui/entities/weapon_milk_gun"
 SWEP.Base = "weapon_base"
 SWEP.HoldType = "pistol"
 SWEP.Slot = 1
@@ -36,13 +38,13 @@ local SecondSound = Sound("milk_altfire.wav")
 local Killicon_Color_Icon = Color(255, 255, 255, 255)
 
 if CLIENT then
-    killicon.Add("milk_gun", "/HUD/killicons/milk_gun", Killicon_Color_Icon)
+    killicon.Add("ent_sb_milk_gun", "HUD/killicons/milk_gun", Killicon_Color_Icon)
 end
 
 function SWEP:Initialize()
 end
 
-SWEP.WepSelectIcon = Material("vgui/entities/swep_milkgun")
+SWEP.WepSelectIcon = Material("vgui/entities/weapon_milk_gun")
 
 function SWEP:DrawWeaponSelection(x, y, w, h, a)
     render.PushFilterMag(TEXFILTER.ANISOTROPIC)
@@ -73,7 +75,7 @@ function SWEP:PrimaryAttack()
     end
 
     if (CLIENT) then return end
-    local ent = ents.Create("milk_gun")
+    local ent = ents.Create("ent_sb_milk_gun")
     if (not IsValid(ent)) then return end
     ent:SetModel("models/props_junk/garbage_milkcarton002a.mdl")
     ent:SetAngles(self.currentOwner:EyeAngles())
