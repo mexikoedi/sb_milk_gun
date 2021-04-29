@@ -38,7 +38,7 @@ local SecondSound = Sound("milk_altfire.wav")
 local Killicon_Color_Icon = Color(255, 255, 255, 255)
 
 if CLIENT then
-    killicon.Add("ent_sb_milk_gun", "HUD/killicons/milk_gun", Killicon_Color_Icon)
+    killicon.Add("ent_milk_gun", "HUD/killicons/milk_gun", Killicon_Color_Icon)
 end
 
 function SWEP:Initialize()
@@ -75,7 +75,7 @@ function SWEP:PrimaryAttack()
     end
 
     if (CLIENT) then return end
-    local ent = ents.Create("ent_sb_milk_gun")
+    local ent = ents.Create("ent_milk_gun")
     if (not IsValid(ent)) then return end
     ent:SetModel("models/props_junk/garbage_milkcarton002a.mdl")
     ent:SetAngles(self.currentOwner:EyeAngles())
