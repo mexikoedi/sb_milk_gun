@@ -10,13 +10,15 @@ end
 
 SWEP.PrintName = "Milk Gun"
 SWEP.Author = "mexikoedi"
+SWEP.Contact = "Steam"
 SWEP.Instructions = "Shoot and play a sound with primary attack. Use secondary attack to hear a different sound."
-SWEP.Purpose = "Gives milk bags to everyone"
+SWEP.Purpose = "Give milk bags to everyone."
 SWEP.Category = "mexikoedi's SWEPS"
 SWEP.DrawWeaponInfoBox = true
 SWEP.BounceWeaponIcon = true
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
+SWEP.AdminSpawnable = false
 SWEP.Icon = "vgui/entities/weapon_milk_gun"
 SWEP.Base = "weapon_base"
 SWEP.HoldType = "pistol"
@@ -53,7 +55,7 @@ function SWEP:DrawWeaponSelection(x, y, w, h, a)
     surface.SetMaterial(self.WepSelectIcon)
     local fsin = 0
 
-    if (self.BounceWeaponIcon == true) then
+    if self.BounceWeaponIcon == true then
         fsin = math.sin(CurTime() * 10) * 5
     end
 
@@ -74,12 +76,12 @@ function SWEP:PrimaryAttack()
         self.currentOwner:EmitSound(ShootSound)
     end
 
-    if (CLIENT) then return end
+    if CLIENT then return end
     local ent = ents.Create("ent_milk_gun")
-    if (not IsValid(ent)) then return end
+    if not IsValid(ent) then return end
     ent:SetModel("models/props_junk/garbage_milkcarton002a.mdl")
     ent:SetAngles(self.currentOwner:EyeAngles())
-    ent:SetPos(self.currentOwner:EyePos() + (self.currentOwner:GetAimVector() * 16))
+    ent:SetPos(self.currentOwner:EyePos() + self.currentOwner:GetAimVector() * 16)
     ent.Owner = self.currentOwner
     ent:SetOwner(self.currentOwner)
     ent:SetPhysicsAttacker(self.currentOwner)
@@ -89,7 +91,7 @@ function SWEP:PrimaryAttack()
     util.SpriteTrail(ent, 0, Color(255, 255, 255), false, 16, 1, 6, 1 / (15 + 1) * 0.5, "trails/laser.vmt")
     local phys = ent:GetPhysicsObject()
 
-    if (not IsValid(phys)) then
+    if not IsValid(phys) then
         ent:Remove()
 
         return
