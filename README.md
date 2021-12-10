@@ -1,6 +1,6 @@
-# SB_Milk_Gun
+# sb_milk_gun
 
-SB_Milk_Gun Addon for Garry's Mod.
+sb_milk_gun addon for Garry's Mod.
 
 More information are available here: 
 https://steamcommunity.com/sharedfiles/filedetails/?id=1905561917
