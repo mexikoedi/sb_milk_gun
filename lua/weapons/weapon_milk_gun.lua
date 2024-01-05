@@ -1,5 +1,4 @@
 if engine.ActiveGamemode() == "terrortown" then return end
-
 if SERVER then
     AddCSLuaFile()
     resource.AddFile("materials/vgui/entities/weapon_milk_gun.vmt")
@@ -38,27 +37,18 @@ SWEP.WorldModel = "models/weapons/w_pist_fiveseven.mdl"
 local ShootSound = Sound("milk.wav")
 local SecondSound = Sound("milk_altfire.wav")
 local Killicon_Color_Icon = Color(255, 255, 255, 255)
-
-if CLIENT then
-    killicon.Add("ent_milk_gun", "HUD/killicons/milk_gun", Killicon_Color_Icon)
-end
-
+if CLIENT then killicon.Add("ent_milk_gun", "HUD/killicons/milk_gun", Killicon_Color_Icon) end
 function SWEP:Initialize()
 end
 
 SWEP.WepSelectIcon = Material("vgui/entities/weapon_milk_gun")
-
 function SWEP:DrawWeaponSelection(x, y, w, h, a)
     render.PushFilterMag(TEXFILTER.ANISOTROPIC)
     render.PushFilterMin(TEXFILTER.ANISOTROPIC)
     surface.SetDrawColor(255, 255, 255, a)
     surface.SetMaterial(self.WepSelectIcon)
     local fsin = 0
-
-    if self.BounceWeaponIcon == true then
-        fsin = math.sin(CurTime() * 10) * 5
-    end
-
+    if self.BounceWeaponIcon == true then fsin = math.sin(CurTime() * 10) * 5 end
     local size = math.min(w, h) - 32
     surface.DrawTexturedRect(x - 50 + w + fsin / 2 - size - fsin / 2, y + h * 0.05 - fsin * 2, size, size + fsin)
     render.PopFilterMag()
@@ -71,11 +61,7 @@ function SWEP:PrimaryAttack()
     self:SetNextPrimaryFire(CurTime() + 1 / self.Primary.RPS)
     if not self:CanPrimaryAttack() then return end
     self:TakePrimaryAmmo(1)
-
-    if SERVER then
-        self.currentOwner:EmitSound(ShootSound)
-    end
-
+    if SERVER then self.currentOwner:EmitSound(ShootSound) end
     if CLIENT then return end
     local ent = ents.Create("ent_milk_gun")
     if not IsValid(ent) then return end
@@ -90,10 +76,8 @@ function SWEP:PrimaryAttack()
     ent:Activate()
     util.SpriteTrail(ent, 0, Color(255, 255, 255), false, 16, 1, 6, 1 / (15 + 1) * 0.5, "trails/laser.vmt")
     local phys = ent:GetPhysicsObject()
-
     if not IsValid(phys) then
         ent:Remove()
-
         return
     end
 
@@ -106,28 +90,18 @@ end
 function SWEP:SecondaryAttack()
     self.currentOwner = self:GetOwner()
     self:SetNextSecondaryFire(CurTime() + 5)
-
-    if SERVER then
-        self.currentOwner:EmitSound(SecondSound)
-    end
+    if SERVER then self.currentOwner:EmitSound(SecondSound) end
 end
 
 function SWEP:Holster()
-    if SERVER and IsValid(self.currentOwner) then
-        self.currentOwner:StopSound("milk_altfire.wav")
-    end
-
+    if SERVER and IsValid(self.currentOwner) then self.currentOwner:StopSound("milk_altfire.wav") end
     return true
 end
 
 function SWEP:OnRemove()
-    if SERVER and IsValid(self.currentOwner) then
-        self.currentOwner:StopSound("milk_altfire.wav")
-    end
+    if SERVER and IsValid(self.currentOwner) then self.currentOwner:StopSound("milk_altfire.wav") end
 end
 
 function SWEP:OnDrop()
-    if SERVER and IsValid(self.currentOwner) then
-        self.currentOwner:StopSound("milk_altfire.wav")
-    end
+    if SERVER and IsValid(self.currentOwner) then self.currentOwner:StopSound("milk_altfire.wav") end
 end
