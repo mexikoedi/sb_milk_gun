@@ -58,6 +58,7 @@ end
 
 function SWEP:PrimaryAttack()
     self.currentOwner = self:GetOwner()
+    if not IsValid(self.currentOwner) then return end
     self:SetNextPrimaryFire(CurTime() + 1 / self.Primary.RPS)
     if not self:CanPrimaryAttack() then return end
     self:TakePrimaryAmmo(1)
@@ -88,20 +89,22 @@ function SWEP:PrimaryAttack()
 end
 
 function SWEP:SecondaryAttack()
-    self.currentOwner = self:GetOwner()
     self:SetNextSecondaryFire(CurTime() + 5)
-    if SERVER then self.currentOwner:EmitSound(SecondSound) end
+    if SERVER then
+        self.currentOwner = self:GetOwner()
+        if IsValid(self.currentOwner) then self.currentOwner:EmitSound(SecondSound) end
+    end
 end
 
 function SWEP:Holster()
-    if SERVER and IsValid(self.currentOwner) then self.currentOwner:StopSound("milk_altfire.wav") end
+    if SERVER and IsValid(self.currentOwner) then self.currentOwner:StopSound(SecondSound) end
     return true
 end
 
 function SWEP:OnRemove()
-    if SERVER and IsValid(self.currentOwner) then self.currentOwner:StopSound("milk_altfire.wav") end
+    if SERVER and IsValid(self.currentOwner) then self.currentOwner:StopSound(SecondSound) end
 end
 
 function SWEP:OnDrop()
-    if SERVER and IsValid(self.currentOwner) then self.currentOwner:StopSound("milk_altfire.wav") end
+    if SERVER and IsValid(self.currentOwner) then self.currentOwner:StopSound(SecondSound) end
 end
