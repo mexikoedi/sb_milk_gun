@@ -64,8 +64,13 @@ function SWEP:PrimaryAttack()
     self:TakePrimaryAmmo(1)
     if SERVER then self.currentOwner:EmitSound(ShootSound) end
     if CLIENT then return end
+    self.currentOwner:LagCompensation(true)
     local ent = ents.Create("ent_milk_gun")
-    if not IsValid(ent) then return end
+    if not IsValid(ent) then
+        self.currentOwner:LagCompensation(false)
+        return
+    end
+
     ent:SetModel("models/props_junk/garbage_milkcarton002a.mdl")
     ent:SetAngles(self.currentOwner:EyeAngles())
     ent:SetPos(self.currentOwner:EyePos() + self.currentOwner:GetAimVector() * 16)
@@ -79,6 +84,7 @@ function SWEP:PrimaryAttack()
     local phys = ent:GetPhysicsObject()
     if not IsValid(phys) then
         ent:Remove()
+        self.currentOwner:LagCompensation(false)
         return
     end
 
@@ -86,6 +92,7 @@ function SWEP:PrimaryAttack()
     phys:SetVelocity(self.currentOwner:GetAimVector() * 100000)
     local anglo = Angle(-10, -5, 0)
     self.currentOwner:ViewPunch(anglo)
+    self.currentOwner:LagCompensation(false)
 end
 
 function SWEP:SecondaryAttack()
