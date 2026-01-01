@@ -2,7 +2,7 @@
 
 Sandbox Milk Gun addon for Garry's Mod.
 
-More information are available here: 
+More information is available here: 
 https://steamcommunity.com/sharedfiles/filedetails/?id=1905561917
 
 Feel free to contribute to this project. <br>
