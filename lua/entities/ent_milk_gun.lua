@@ -9,8 +9,6 @@ ENT.Purpose = "Milk entity for the milk gun."
 ENT.Spawnable = false
 ENT.AdminSpawnable = false
 ENT.AdminOnly = false
-ENT.Collided = 0
-local CollisionsBeforeRemove = 10
 if SERVER then
     AddCSLuaFile()
     function ENT:Initialize()
@@ -18,6 +16,7 @@ if SERVER then
         self:PhysicsInit(SOLID_VPHYSICS)
         self:SetMoveType(MOVETYPE_VPHYSICS)
         self:SetSolid(SOLID_VPHYSICS)
+        self.Armed = true
         local phys = self:GetPhysicsObject()
         if phys:IsValid() then
             phys:Wake()
@@ -28,14 +27,33 @@ if SERVER then
         self:SetUseType(SIMPLE_USE)
     end
 
+    function ENT:Think()
+        self.lifetime = self.lifetime or CurTime() + 10
+        if CurTime() > self.lifetime then self:Remove() end
+    end
+
+    function ENT:Disable()
+        self.PhysicsCollide = function() end
+        self.lifetime = CurTime() + 15
+    end
+
     function ENT:PhysicsCollide(data)
-        self.Collided = self.Collided + 1
-        if self.Collided <= CollisionsBeforeRemove then
-            local Ent = data.HitEntity
-            if not IsValid(self) or not IsValid(Ent) or not Ent:IsPlayer() then return end
-        else
-            timer.Simple(0, function() if IsValid(self) then self:Remove() end end)
+        local hitEnt = data.HitEntity
+        if not IsValid(self) or self.HasHit or not self.Armed then return end
+        if not IsValid(hitEnt) or not hitEnt:IsPlayer() and not hitEnt:IsNPC() then
+            self.Armed = false
+            self:Disable()
+            return
         end
+
+        self.HasHit = true
+        self.Armed = false
+        local effectdata = EffectData()
+        effectdata:SetStart(data.HitPos)
+        effectdata:SetOrigin(data.HitPos)
+        effectdata:SetScale(1)
+        util.Effect("BloodImpact", effectdata)
+        self:Disable()
     end
 end
 

@@ -18,6 +18,7 @@ SWEP.BounceWeaponIcon = true
 SWEP.Spawnable = true
 SWEP.AdminOnly = false
 SWEP.AdminSpawnable = false
+SWEP.AllowDrop = true
 SWEP.Icon = "vgui/entities/weapon_milk_gun"
 SWEP.Base = "weapon_base"
 SWEP.HoldType = "pistol"
